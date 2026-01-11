@@ -11,7 +11,7 @@ for sym in symbols:
 
     print(sym, result["score"])
 
-    if result["score"] >= 5:
+    if result["score"] >= 7:
         message = f"""
 📊 {result['symbol']}
 RSI: {result['rsi']}
