@@ -27,7 +27,7 @@ msg.append("--------------------------------")
 for r in top:
     level_icon = "🟢" if r["score"] >= 7 else "🟡"
     msg.append(
-        f"{r['symbol'][:6]:<8} "
+        f"#{r['symbol'][:6]:<8} "
         f"{r['rsi']:<5} "
         f"{r['score']:<4}  "
         f"{level_icon}"
