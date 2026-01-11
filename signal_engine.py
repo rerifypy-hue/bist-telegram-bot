@@ -1,12 +1,19 @@
 import yfinance as yf
 import pandas as pd
 from indicators import rsi, ema
-
 def analyze(symbol):
     try:
         df = yf.download(symbol, period="3mo", interval="1d", progress=False)
 
         if df.empty or len(df) < 30:
+            return None
+
+        # 🔒 MultiIndex fix (ÇOK KRİTİK)
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+
+        # 🔒 Kolon kontrolü
+        if "Close" not in df.columns or "Volume" not in df.columns:
             return None
 
         df["Close"] = df["Close"].astype(float)
@@ -18,14 +25,13 @@ def analyze(symbol):
         df["VOL_MA20"] = df["Volume"].rolling(20).mean()
         df["HIGH20"] = df["Close"].rolling(20).max()
 
-        # 🔒 EN KRİTİK SATIR
         df.dropna(inplace=True)
 
-        if len(df) < 2:
+        if len(df) < 2 or "RSI" not in df.columns:
             return None
 
-        last = df.iloc[-1].to_dict()
-        prev = df.iloc[-2].to_dict()
+        last = df.iloc[-1]
+        prev = df.iloc[-2]
 
         score = 0
         reasons = []
@@ -59,7 +65,7 @@ def analyze(symbol):
             "score": score,
             "level": level,
             "reasons": reasons,
-            "rsi": round(last["RSI"], 1)
+            "rsi": round(float(last["RSI"]), 1)
         }
 
     except Exception as e:
