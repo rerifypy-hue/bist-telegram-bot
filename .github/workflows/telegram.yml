@@ -1,15 +1,17 @@
-name: BIST Telegram Bot
+name: BIST Telegram Sinyal Botu
 
 on:
   schedule:
-    - cron: "10 15 * * 1-5" # TSİ 18:10
+    - cron: "10 15 * * 1-5" # TSİ 18:10 (Borsa kapanışı sonrası)
   workflow_dispatch:
 
 jobs:
-  run:
+  run-bot:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Repo'yu çek
+        uses: actions/checkout@v4
 
       - name: Python kurulumu
         uses: actions/setup-python@v5
@@ -17,7 +19,9 @@ jobs:
           python-version: "3.11"
 
       - name: Paketleri yükle
-        run: pip install -r requirements.txt
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Botu çalıştır
         env:
