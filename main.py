@@ -9,6 +9,8 @@ for sym in symbols:
     if not result:
         continue
 
+    print(sym, result["score"])
+
     if result["score"] >= 5:
         message = f"""
 📊 {result['symbol']}
