@@ -2,7 +2,7 @@ name: BIST Telegram Sinyal Botu
 
 on:
   schedule:
-    - cron: "10 15 * * 1-5" # TSİ 18:10 (Borsa kapanışı sonrası)
+    - cron: "45 14 * * 1-5" # TSİ 18:10 (Borsa kapanışı sonrası)
   workflow_dispatch:
 
 jobs:
