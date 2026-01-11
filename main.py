@@ -9,7 +9,7 @@ for sym in symbols:
     if not result:
         continue
 
-    if result["score"] >= 7:
+    if result["score"] >= 5:
         message = f"""
 📊 {result['symbol']}
 RSI: {result['rsi']}
