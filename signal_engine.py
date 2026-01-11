@@ -57,4 +57,5 @@ def analyze(symbol):
         }
 
     except Exception as e:
+        print(e)
         return None
