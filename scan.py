@@ -3,20 +3,12 @@ import pandas as pd
 import ta
 import requests
 import os
+from get_bist_symbols import get_bist_symbols
 
 TG_TOKEN = os.getenv("TG_TOKEN")
 TG_CHAT_ID = os.getenv("TG_CHAT_ID")
 
-BIST = [
-    "AKBNK.IS",
-    "GARAN.IS",
-    "YKBNK.IS",
-    "ASELS.IS",
-    "THYAO.IS",
-    "KRDMD.IS",
-    "PETKM.IS",
-    "SISE.IS"
-]
+BIST = get_bist_symbols()
 
 def send_telegram(message: str):
     url = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
