@@ -4,11 +4,9 @@ import ta
 import requests
 import os
 
-# Telegram bilgileri (GitHub Secrets)
 TG_TOKEN = os.getenv("TG_TOKEN")
 TG_CHAT_ID = os.getenv("TG_CHAT_ID")
 
-# İzlenecek BIST hisseleri (isteğe göre artır)
 BIST = [
     "AKBNK.IS",
     "GARAN.IS",
@@ -37,21 +35,28 @@ for symbol in BIST:
             symbol,
             period="3mo",
             interval="1d",
-            progress=False
+            progress=False,
+            group_by="column"  # önemli
         )
 
         if df.empty or len(df) < 50:
             continue
 
+        # 🔴 MULTIINDEX FIX (ASIL ÇÖZÜM)
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+
         # Teknik indikatörler
-        df["EMA20"] = ta.trend.ema_indicator(df["Close"], window=20)
-        df["EMA50"] = ta.trend.ema_indicator(df["Close"], window=50)
-        df["RSI"] = ta.momentum.rsi(df["Close"], window=14)
-        df["VOL_AVG"] = df["Volume"].rolling(20).mean()
+        close = df["Close"]
+        volume = df["Volume"]
+
+        df["EMA20"] = ta.trend.ema_indicator(close, window=20)
+        df["EMA50"] = ta.trend.ema_indicator(close, window=50)
+        df["RSI"] = ta.momentum.rsi(close, window=14)
+        df["VOL_AVG"] = volume.rolling(20).mean()
 
         last = df.iloc[-1]
 
-        # Sinyal şartları
         if (
             last["EMA20"] > last["EMA50"] and
             last["RSI"] > 50 and
@@ -67,7 +72,6 @@ for symbol in BIST:
     except Exception as e:
         print(f"Hata: {symbol} → {e}")
 
-# Telegram mesajı
 if signals:
     message = "🔔 *BIST GÜNLÜK SİNYALLER*\n\n" + "\n\n".join(signals)
 else:
