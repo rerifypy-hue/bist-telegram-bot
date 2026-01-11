@@ -4,21 +4,34 @@ from telegram import send
 
 symbols = get_bist_symbols()
 
+results = []
+
 for sym in symbols:
     result = analyze(sym)
     if not result:
         continue
+    results.append(result)
 
-    print(sym, result["score"])
+# 🔝 En yüksek puanlılar
+top = sorted(results, key=lambda x: x["score"], reverse=True)[:10]
 
-    if result["score"] >= 7:
-        message = f"""
-📊 {result['symbol']}
-RSI: {result['rsi']}
-Puan: {result['score']}/10
-{result['level']}
+if not top:
+    send("📉 Bugün BIST genelinde güçlü bir sinyal oluşmadı.")
+    exit()
 
-Nedenler:
-- """ + "\n- ".join(result["reasons"])
+msg = []
+msg.append("📊 BIST GÜNLÜK SİNYAL TABLOSU\n")
+msg.append("HİSSE     RSI   PUAN  SİNYAL")
+msg.append("--------------------------------")
 
-        send(message.strip())
+for r in top:
+    level_icon = "🟢" if r["score"] >= 7 else "🟡"
+    msg.append(
+        f"{r['symbol'][:6]:<8} "
+        f"{r['rsi']:<5} "
+        f"{r['score']:<4}  "
+        f"{level_icon}"
+    )
+
+msg.append(f"\n📈 Toplam taranan hisse: {len(results)}")
+send("\n".join(msg))
