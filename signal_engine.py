@@ -5,20 +5,21 @@ from indicators import rsi, ema
 def analyze(symbol):
     try:
         df = yf.download(symbol, period="3mo", interval="1d", progress=False)
+
         if df.empty or len(df) < 30:
             return None
 
-        close = df["Close"].squeeze()
-        volume = df["Volume"].squeeze()
+        df["Close"] = df["Close"].astype(float)
+        df["Volume"] = df["Volume"].astype(float)
 
-        df["RSI"] = rsi(close)
-        df["EMA20"] = ema(close, 20)
-        df["EMA50"] = ema(close, 50)
-        df["VOL_MA20"] = volume.rolling(20).mean()
-        df["HIGH20"] = close.rolling(20).max()
+        df["RSI"] = rsi(df["Close"])
+        df["EMA20"] = ema(df["Close"], 20)
+        df["EMA50"] = ema(df["Close"], 50)
+        df["VOL_MA20"] = df["Volume"].rolling(20).mean()
+        df["HIGH20"] = df["Close"].rolling(20).max()
 
-        last = df.iloc[-1]
-        prev = df.iloc[-2]
+        last = df.iloc[-1].to_dict()
+        prev = df.iloc[-2].to_dict()
 
         score = 0
         reasons = []
@@ -41,12 +42,11 @@ def analyze(symbol):
         if last["Close"] >= last["HIGH20"]:
             score += 2; reasons.append("20g direnç kırılımı")
 
-        if score >= 7:
-            level = "🟢 GÜÇLÜ ALIM"
-        elif score >= 4:
-            level = "🟡 ORTA SİNYAL"
-        else:
-            level = "🔴 ZAYIF"
+        level = (
+            "🟢 GÜÇLÜ ALIM" if score >= 7 else
+            "🟡 ORTA SİNYAL" if score >= 4 else
+            "🔴 ZAYIF"
+        )
 
         return {
             "symbol": symbol,
@@ -57,5 +57,5 @@ def analyze(symbol):
         }
 
     except Exception as e:
-        print(e)
+        print(f"Hata {symbol}: {e}")
         return None
