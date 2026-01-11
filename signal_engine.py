@@ -18,6 +18,12 @@ def analyze(symbol):
         df["VOL_MA20"] = df["Volume"].rolling(20).mean()
         df["HIGH20"] = df["Close"].rolling(20).max()
 
+        # 🔒 EN KRİTİK SATIR
+        df.dropna(inplace=True)
+
+        if len(df) < 2:
+            return None
+
         last = df.iloc[-1].to_dict()
         prev = df.iloc[-2].to_dict()
 
