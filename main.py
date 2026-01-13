@@ -42,7 +42,7 @@ for r in top:
     symbol = r['symbol'].replace(".IS", "").upper()
     # FORMAT: [SYSTEM_SCAN] altındaki satırlar
     msg.append(
-        f"{bar} #{symbol:<5} ❯ RSI:{rsi_val:>2} ❯ S:{r['score']:02}\n"
+        f"{bar} #{symbol:<5} ❯ RSI:{rsi_val:>2} ❯ S:{r['score']:02}"
     )
 
 # Tweet'i birleştirme
