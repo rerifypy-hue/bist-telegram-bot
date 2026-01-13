@@ -52,4 +52,4 @@ final = header + "\n" + "\n".join(msg) + footer
 
 
 
-send("\n".join(final))
+send(final)
