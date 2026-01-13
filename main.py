@@ -13,7 +13,7 @@ for sym in symbols:
     results.append(result)
 
 # 🔝 En yüksek puanlılar
-top = sorted(results, key=lambda x: x["score"], reverse=True)[:10]
+top = sorted(results, key=lambda x: x["score"], reverse=True)[:5]
 
 if not top:
     print("📉 Bugün BIST genelinde güçlü bir sinyal oluşmadı.")
