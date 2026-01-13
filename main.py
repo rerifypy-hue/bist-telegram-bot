@@ -39,10 +39,10 @@ for r in top:
     
     # RSI'yı tam sayı yap 
     rsi_val = int(r['rsi'])
-    
+    symbol = r['symbol'].replace(".IS", "").upper()
     # FORMAT: [SYSTEM_SCAN] altındaki satırlar
     msg.append(
-        f"{bar} #{r['symbol']:<5} ❯ RSI:{rsi_val:>2} ❯ S:{r['score']:02} {status_icon}\n"
+        f"{bar} #{symbol:<5} ❯ RSI:{rsi_val:>2} ❯ S:{r['score']:02} {status_icon}\n"
     )
 
 # Tweet'i birleştirme
@@ -52,4 +52,4 @@ final = header + "\n" + "\n".join(msg) + footer
 
 
 msg.append(f"\n📈 Toplam taranan hisse: {len(results)}")
-send("\n".join(msg))
+send("\n".join(final))
