@@ -42,7 +42,7 @@ for r in top:
     symbol = r['symbol'].replace(".IS", "").upper()
     # FORMAT: [SYSTEM_SCAN] altındaki satırlar
     msg.append(
-        f"{bar} #{symbol:<5} ❯ RSI:{rsi_val:>2} ❯ S:{r['score']:02}"
+        f"{bar} #{symbol:<5} ❯ RSI:{rsi_val:>2} ❯ S:{r['score']:02}\n"
     )
 
 # Tweet'i birleştirme
@@ -51,5 +51,5 @@ footer = "\n#BIST"
 final = header + "\n" + "\n".join(msg) + footer
 
 
-msg.append(f"\n📈 Toplam taranan hisse: {len(results)}")
+
 send("\n".join(final))
