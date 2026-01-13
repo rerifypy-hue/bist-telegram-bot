@@ -20,18 +20,36 @@ if not top:
     exit()
 
 msg = []
-msg.append("📊 BIST GÜNLÜK SİNYAL TABLOSU\n")
-msg.append("HİSSE     RSI   PUAN  SİNYAL")
-msg.append("--------------------------------")
+
+
+
+
 
 for r in top:
-    level_icon = "🟢" if r["score"] >= 7 else "🟡"
+    # Skoruna göre doluluk barı ve ikon belirleme
+    if r["score"] >= 8:
+        bar = "▰▰▰"  # Tam dolu
+        status_icon = "🟢"
+    elif r["score"] >= 6:
+        bar = "▰▰▱"  # Orta dolu
+        status_icon = "🟡"
+    else:
+        bar = "▰▱▱"  # Düşük dolu
+        status_icon = "🔴"
+    
+    # RSI'yı tam sayı yap 
+    rsi_val = int(r['rsi'])
+    
+    # FORMAT: [SYSTEM_SCAN] altındaki satırlar
     msg.append(
-        f"#{r['symbol'][:6]:<8} "
-        f"{r['rsi']:<5} "
-        f"{r['score']:<4}  "
-        f"{level_icon}"
+        f"{bar} #{symbol:<5} ❯ RSI:{rsi_val:>2} ❯ S:{r['score']:02} {status_icon}\n"
     )
+
+# Tweet'i birleştirme
+header = "［ ＳＹＳＴＥＭ＿ＳＣＡＮ ］\n"
+footer = "\n#BIST"
+final = header + "\n" + "\n".join(msg) + footer
+
 
 msg.append(f"\n📈 Toplam taranan hisse: {len(results)}")
 send("\n".join(msg))
