@@ -16,7 +16,7 @@ for sym in symbols:
 top = sorted(results, key=lambda x: x["score"], reverse=True)[:10]
 
 if not top:
-    send("📉 Bugün BIST genelinde güçlü bir sinyal oluşmadı.")
+    print("📉 Bugün BIST genelinde güçlü bir sinyal oluşmadı.")
     exit()
 
 msg = []
